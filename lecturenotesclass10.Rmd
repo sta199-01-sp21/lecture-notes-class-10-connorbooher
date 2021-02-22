@@ -133,6 +133,8 @@ compute this theoretically yet, but this is what computers are good at.
 
 Before we do this, what is your guess as to what the probability will be?
 
+I'm not sure...
+
 We'll still use `sample()` to run our simulation many times, but we'll
 use `dplyr` functions to compute the relative frequencies.
 
@@ -172,16 +174,28 @@ Perform a simulation to compute this empirical probability.
 
 Write down your guess to the answer before you calculate it.
 
-```{r simulate_rolls}
+I believe the former has a higher probability...
 
+```{r simulate_rolls}
+dice <- c(1, 2, 3, 4, 5, 6)
+two_roll_results <- tibble (
+  die_1 = replicate(n = 10000, expr = sample(1:6, size = 1)),
+  die_2 = replicate(n = 10000, expr = sample(1:6, size = 1)))
+two_roll_results
 ```
 
-```{r identify_events}
 
+```{r identify_events}
+two_roll_results <- two_roll_results %>% 
+  mutate(match_1 = ((die_1)^2 == die_2), 
+         match_2 = abs(die_1 - die_2) == 4) 
+two_roll_results
 ```
 
 ```{r summarize_rolls}
-
+two_roll_results %>%
+  count(match_1, match_2) %>%
+  mutate(prop = n / sum(n))
 ```
 
 ## Additional Resources-please look at before Weds.
